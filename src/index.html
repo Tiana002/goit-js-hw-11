@@ -4,10 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Page title</title>
+
     <link rel="stylesheet" href="./css/style.css" />
   </head>
   <body>
-    <!-- ❗️❗️❗️ Add partials like so for every page -->
     <form class="search-form" id="search-form">
       <input
         type="text"
@@ -15,8 +15,29 @@
         autocomplete="off"
         placeholder="Search images..."
       />
-      <button type="submit">Search</button>
+      <button type="submit" class="btn">Search</button>
     </form>
-    <script type="module" src="./index.js"></script>
+
+    <div class="container gallery"></div>
+
+    <div class="page-load-status">
+      <div class="loader-ellips infinite-scroll-request is-hidden">
+        <span class="loader-ellips__point"></span>
+        <span class="loader-ellips__point"></span>
+        <span class="loader-ellips__point"></span>
+        <span class="loader-ellips__point"></span>
+      </div>
+      <p class="infinite-scroll-last is-hidden">End of content</p>
+      <p class="infinite-scroll-error is-hidden">No more pages to load</p>
+    </div>
+
+    <button type="button" class="load-more btn btn-primary">
+      Load more
+
+      <div class="btn-loader">
+        <span class="spinner" role="status" aria-hidden="true"></span>
+      </div>
+    </button>
+    <script type="module" src="./js/index.js"></script>
   </body>
 </html>

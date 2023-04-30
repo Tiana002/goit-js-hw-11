@@ -1,0 +1,224 @@
+
+:root {
+    --scroll-content-margin: 0px;
+  }
+  /* Global */
+  *,
+  ::before,
+  ::after {
+    box-sizing: border-box;
+  }
+  p,
+  body {
+    margin: 0;
+  }
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+  
+  button,
+  input {
+    border: 0;
+    padding: 8px;
+  
+    font-family: inherit;
+  }
+  
+  img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  body {
+    font-style: normal;
+    font-weight: 400;
+    line-height: 100%;
+  
+    padding: 15px;
+    background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(152,148,233,1) 99%);
+    text-align: center;
+  }
+  /* Form */
+  .on-scroll {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 1;
+    width: 100%;
+    background: linear-gradient(138.13deg, #22343cae 25.87%, #1f2e35b1 100%);
+  }
+  .search-form > input {
+    margin: 12px;
+    min-width: 300px;
+    height: 48px;
+    border-radius: 8px;
+    background: #fff;
+    font-size: 20px;
+    padding: 10px;
+    outline: none;
+  }
+
+
+  .btn {
+    font-size: 20px;
+    width: 160px;
+    height: 48px;
+
+    text-align: center;
+    color: #fff;
+    background: #6560c9;
+    box-shadow: 0px 4px 4px rgba(15, 22, 210, 0.3);
+    
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: background 250ms cubic-bezier(0.4, 0, 0.2, 1), box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    
+}
+
+.btn:hover,
+.btn:focus {
+    background: #7871ee;
+}
+  .btn-loader {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    display: none;
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+    text-align: center;
+    background: #6560c9;
+    box-shadow: 0px 4px 4px rgba(15, 22, 210, 0.3);
+  }
+  .btn-loader:before,
+  .btn-loader:after {
+    content: '';
+    display: inline-block;
+    height: 5px;
+    width: 5px;
+    margin: 0px calc(5px / 2);
+    border-radius: 50%;
+    background: #899a96;
+  }
+  .btn-loader:before {
+    animation: point1 1.2s infinite ease-in-out both;
+  }
+  btn-loader > span {
+    display: inline-block;
+    height: 5px;
+    width: 5px;
+    margin: 0px calc(5px / 2);
+    border-radius: 50%;
+    background: #899a96;
+    animation: point2 1.2s infinite ease-in-out both;
+  }
+  .btn-loader:after {
+    animation: point3 1.2s infinite ease-in-out both;
+  }
+  .btn-loading {
+    position: relative;
+  }
+  .btn-loading > .btn-loader {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+ 
+  /* Gallery */
+  .container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: var(--scroll-content-margin);
+    gap: 20px;
+    padding: 24px 0;
+  }
+  .gallery__item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 15px;
+    background: #6b3fb4;
+    border: 1px solid #492ee3;
+    transition: box-shadow 500ms cubic-bezier(0.4, 0, 0.2, 1);
+    transition: border 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .gallery__item:hover,
+  .gallery__item:focus {
+    box-shadow: 0px 1px 14px #19282f;
+    border: 1px solid #f9f9f9;
+  }
+  .photo-card {
+    display: flex;
+    flex-direction: column;
+    width: 348px;
+    height: 100%;
+    padding: 5px;
+  }
+  .photo-card > img {
+    border-radius: 12px;
+  }
+  .info {
+    display: flex;
+    margin-top: 8px;
+  }
+  .info-item {
+    font-weight: 700;
+    font-size: 16px;
+    color: rgba(249, 249, 249, 0.7);
+  }
+  .info-item:not(:last-child) {
+    margin-right: 6px;
+  }
+  .info-item > b {
+    font-weight: 400;
+    font-size: 18px;
+    color: #f9f9f9;
+  }
+  /* Modal window */
+  .sl-image {
+    border-radius: 25px;
+    overflow: hidden;
+  }
+  .sl-overlay {
+    background: linear-gradient(
+      138.13deg,
+      #3280a1 25.87%,
+      #0a171e 100%
+    ) !important;
+  }
+  .is-hidden {
+    display: none;
+  }
+  
+  .page-load-status {
+    font-weight: 700;
+    line-height: 100%;
+  
+    padding-top: 20px;
+    text-align: center;
+    color: #2c2a81;
+  }
+  
+  .loader-ellips > span {
+    display: inline-block;
+    height: 10px;
+    width: 10px;
+    margin: 0px calc(10px / 2);
+    border-radius: 50%;
+    background: hsl(270.83deg 88.4% 45.3%);
+  }
+  
+  .loader-ellips > span:first-child {
+    animation: point1 1.2s infinite ease-in-out both;
+  }
+  .loader-ellips > span {
+    animation: point2 1.2s infinite ease-in-out both;
+  }
+  .loader-ellips > span:last-child {
+    animation: point3 1.2s infinite ease-in-out both;
+  }
