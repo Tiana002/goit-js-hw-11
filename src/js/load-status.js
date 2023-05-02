@@ -25,7 +25,7 @@ export default class PageLoadStatus {
   
     enable() {
       this.refs.ellips.classList.add('is-hidden');
-      this.refs.infScrollLast.classList.add('is-hidden');
+      // this.refs.infScrollLast.classList.add('is-hidden');
       this.refs.infScrollError.classList.add('is-hidden');
     }
   

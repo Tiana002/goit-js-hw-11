@@ -5,64 +5,65 @@ import PostApiService from '../post-servise';
 import LoadMoreBtn from '../btn-load-more';
 import PageLoadStatus from './load-status';
 import formSticky from './form-sticky';
+import LoadingPoint from './loading-point';
+let totalHits = 0;
 
 const refs = {
   formSearch: document.querySelector('.search-form'),
   gallery: document.querySelector('.gallery'),
- 
 };
 
 const loadMoreBtn = new LoadMoreBtn({
   selector: '.load-more',
   hidden: true,
+  
+});
+
+const loadingPoint = new LoadingPoint({
+  selector: '.loading-point',
 });
 
 const pageLoadStatus = new PageLoadStatus({
     selector: '.page-load-status',
   });
 
-  const postApiService = new PostApiService();
+const postApiService = new PostApiService();
 const lightbox = new SimpleLightbox('.gallery__item', {
     captionDelay: 250,
     captionsData: 'alt',
     enableKeyboard: true,
   });
+
   const obsOptions = {
     root: null,
     rootMargin: '100px',
     treshold: 1,
   };
-  const observer = new IntersectionObserver(onLoading, obsOptions);
 
+const observer = new IntersectionObserver(onLoading, obsOptions);
 refs.formSearch.addEventListener('submit', onSearch);
 loadMoreBtn.refs.button.addEventListener('click', onLoadMore);
 window.addEventListener('scroll', formSticky);
 
 function onSearch(e) {
-  e.preventDefault();
-  pageLoadStatus.hide();
-
-  postApiService.query = e.target.searchQuery.value.trim();
-  loadMoreBtn.show();
-  postApiService.resetPage();
-  clearGallery();
-  fetchPosts();
+  clearPage(e);
+  showLoading();
+  postApiService.fetchPost().then(data => {
+    handleLoadedPosts(data);
+  });
 }
-function onLoadMore() {
-    fetchPosts();
+
+ function onLoadMore() {
     pageLoadStatus.show();
-    observer.observe(pageLoadStatus.refs.pageLoadStatus);
+    showLoading();
+    observer.observe(loadingPoint.refs.loadingPoint);
   }
 
-function fetchPosts() {
-  loadMoreBtn.hide();
-  pageLoadStatus.loadingShow();
+  function handleLoadedPosts(loadedPostsData){
+    totalHits = loadedPostsData.totalHits;
+    const currentPage = postApiService.page - 1;
 
-  postApiService.fetchPost().then(data => {
-    const curentPage = postApiService.page - 1;
-    postApiService.hits = data.totalHits;
-
-    if (!data.totalHits) {
+    if (!loadedPostsData.totalHits) {
       loadMoreBtn.hide();
       pageLoadStatus.errorShow();
 
@@ -71,20 +72,26 @@ function fetchPosts() {
       );
     }
   
-      if (!data.hits.length) {
-        loadMoreBtn.hide();
+      if (!loadedPostsData.hits.length) {
+         loadMoreBtn.hide();
         pageLoadStatus.lastElemShow();
         return;
       }
   
-      renderPost(data.hits);
-      if (curentPage === 1) {
-        Notify.success(`Hooray! We found ${postApiService.hits} images.`);
+      renderPost(loadedPostsData.hits);
+
+      if (currentPage === 1) {
+        Notify.success(`Hooray! We found ${loadedPostsData.totalHits} images.`);
+
+        if (loadedPostsData.totalHits > 40) {
         loadMoreBtn.show();
-      }
+        } else {
+          loadMoreBtn.hide();
+          showLastElementText();
+        }
+      } 
       pageLoadStatus.enable();
-  });
-}
+  }
 
 function renderPost(data) {
   let markupPost = data
@@ -112,33 +119,55 @@ function renderPost(data) {
       }
     )
     .join('');
-
   refs.gallery.insertAdjacentHTML('beforeend', markupPost);
   lightbox.refresh();
- 
+}
+
+function clearPage(e) {
+  e.preventDefault();
+  totalHits = 0;
+  pageLoadStatus.hide();
+  postApiService.query = e.target.searchQuery.value.trim();
+  loadMoreBtn.show();
+  postApiService.resetPage();
+  clearGallery();
 }
 
 function clearGallery() {
   refs.gallery.innerHTML = '';
 }
 
-// function smoothScroll() {
-//     const { height: cardHeight } = document
-//       .querySelector('.gallery')
-//       .firstElementChild.getBoundingClientRect();
-  
-//     window.scrollBy({
-//       top: cardHeight * 2,
-//       behavior: 'smooth',
-//   });
-// }
-
 async function onLoading(entries) {
+  if (isLastPage()) {
+    showLastElementText();
+    return;
+  }
     await entries.forEach(entry => {
       if (entry.isIntersecting) {
-        console.log(entry.isIntersecting);
-        fetchPosts();
+        showLoading();
+        postApiService.fetchPost().then(data => {
+          handleLoadedPosts(data);
+        });
       }
     });
   }
 
+  function isLastPage () {
+    const currentPage = postApiService.page - 1;
+    const totalPageCount = calculatePagesCount(40, totalHits);
+    return currentPage >= totalPageCount;
+  }
+
+  function showLoading(){
+    loadMoreBtn.hide();
+    pageLoadStatus.loadingShow();
+  }
+
+  function showLastElementText(){
+    pageLoadStatus.show();
+    pageLoadStatus.lastElemShow();
+  }
+
+  const calculatePagesCount = (pageSize, totalCount) => {
+    return totalCount < pageSize ? 1 : Math.ceil(totalCount / pageSize);
+};

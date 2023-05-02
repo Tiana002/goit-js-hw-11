@@ -22,10 +22,10 @@ export default class PostsApiService {
       });
   
       try {
+       
         const response = await axios.get(`${BASE_URL}?${OPTIONS.toString()}`);
-  
         this.incrementPage();
-  
+        
         return response.data;
       } catch (error) {
          console.error(error.toJSON());
