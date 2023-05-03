@@ -47,10 +47,7 @@ window.addEventListener('scroll', formSticky);
 
 function onSearch(e) {
   clearPage(e);
-  showLoading();
-  postApiService.fetchPost().then(data => {
-    handleLoadedPosts(data);
-  });
+  fetchPost();
 }
 
  function onLoadMore() {
@@ -59,7 +56,9 @@ function onSearch(e) {
     observer.observe(loadingPoint.refs.loadingPoint);
   }
 
-  function handleLoadedPosts(loadedPostsData){
+  function fetchPost(){
+    showLoading();
+    postApiService.fetchPost().then(loadedPostsData => {
     totalHits = loadedPostsData.totalHits;
     const currentPage = postApiService.page - 1;
 
@@ -91,6 +90,7 @@ function onSearch(e) {
         }
       } 
       pageLoadStatus.enable();
+  });
   }
 
 function renderPost(data) {
@@ -144,10 +144,7 @@ async function onLoading(entries) {
   }
     await entries.forEach(entry => {
       if (entry.isIntersecting) {
-        showLoading();
-        postApiService.fetchPost().then(data => {
-          handleLoadedPosts(data);
-        });
+        fetchPost();
       }
     });
   }
